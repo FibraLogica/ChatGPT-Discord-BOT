@@ -8,6 +8,7 @@ load_dotenv()
 openai.api_key = os.environ.get("CHAT_GPT_API_KEY")
 
 def get_chat_gpt_response(question: str, history: List[Dict[str, str]]) -> str | None:
+    
     # Construir a lista de mensagens com histórico de conversa
     messages = [{"role": "system", "content": "Você é um chatbot útil."}]
     for entry in history:
