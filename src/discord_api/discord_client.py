@@ -17,7 +17,7 @@ class CustomDiscordClient(Client):
 
     async def on_message(self, message: Message):
         # ID do canal específico
-        specific_channel_id = "1120135556320460901" 
+        specific_channel_id = "1120302424708620318" 
 
         # verificação da mensagem se foi enviada no canal específico e não foi enviada pelo próprio bot
         if str(message.channel.id) == specific_channel_id and message.author != self.user:
@@ -27,16 +27,17 @@ class CustomDiscordClient(Client):
 
             # Verificar se a mensagem é um comando especial
             if prompt == "!apagar":
+                # Limpar mensagens no canal do Discord
+                async for msg in message.channel.history():
+                    await msg.channel.purge(limit=20)
+                return
+            elif prompt == "!apagar_admin":
+                # Limpar mensagens no canal do Discord
+                async for msg in message.channel.history():
+                    await msg.delete()
                 # Apagar histórico de conversa
                 with open("conversation_history.json", "w") as file:
                     json.dump([], file)
-                await message.channel.send(content="Histórico de conversa apagado.")
-                return
-            elif prompt == "!apagar_admin":
-                # Apagar histórico de conversa e canal
-                with open("conversation_history.json", "w") as file:
-                    json.dump([], file)
-                await message.channel.delete()
                 return
 
             # Carregar histórico de conversa
