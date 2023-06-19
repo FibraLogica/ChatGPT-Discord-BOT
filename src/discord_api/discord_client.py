@@ -16,15 +16,15 @@ class CustomDiscordClient(Client):
         print(f"Estou conectado ao Discord com o user {self.user}")
 
     async def on_message(self, message: Message):
-        # ID do canal específico em que o bot deve operar
-        specific_channel_id = "1120135556320460901"  # Substitua isso pelo ID do canal
+        # ID do canal específico
+        specific_channel_id = "1120135556320460901" 
 
-        # Verifique se a mensagem foi enviada no canal específico e não foi enviada pelo próprio bot
+        # verificação da mensagem se foi enviada no canal específico e não foi enviada pelo próprio bot
         if str(message.channel.id) == specific_channel_id and message.author != self.user:
-            print(f"Recebi uma mensagem: {message.content}")  # Adicionar esta linha
+            print(f"Recebi uma mensagem: {message.content}")
             prompt = message.content
 
-            # Carregar histórico de conversa do arquivo
+            # Carregar histórico de conversa
             try:
                 with open("conversation_history.json", "r") as file:
                     conversation_history = json.load(file)
@@ -34,24 +34,24 @@ class CustomDiscordClient(Client):
                 conversation_history = []
 
             # Obter resposta do chatbot
-            print("Chamando get_chat_gpt_response...")  # Adicionar esta linha
+            print("Chamando get_chat_gpt_response...")
             chat_gpt_response = get_chat_gpt_response(question=prompt, history=conversation_history)
-            print(f"Resposta recebida: {chat_gpt_response}")  # Adicionar esta linha
+            print(f"Resposta recebida: {chat_gpt_response}")
 
             # Adicionar resposta ao histórico
             if chat_gpt_response:
                 conversation_history.append({"User": prompt, "Bot": chat_gpt_response})
 
-                # Salvar o histórico atualizado no arquivo
+                # Salvar o histórico atualizado
                 with open("conversation_history.json", "w") as file:
                     json.dump(conversation_history, file)
 
                 # Enviar resposta para o canal Discord
                 await message.channel.send(content=chat_gpt_response)
             else:
-                print("Nenhuma resposta recebida do chatbot.")  # Adicionar esta linha
+                print("Nenhuma resposta recebida do chatbot.")
         else:
-            print("Mensagem ignorada (não está no canal específico ou foi enviada pelo bot).")  # Adicionar esta linha
+            print("Mensagem ignorada (não está no canal específico ou foi enviada pelo bot).")
 
 
 intents = Intents.default()
