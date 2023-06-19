@@ -18,9 +18,9 @@ def get_chat_gpt_response(question: str, history: List[Dict[str, str]]) -> str |
     # Fazer a chamada da API OpenAI
     try:
         response_from_chat_gpt = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
+            model="gpt-3.5-turbo",
             messages=messages,
-            max_tokens=1000
+            max_tokens=100
         )
     except Exception as e:
         return None
