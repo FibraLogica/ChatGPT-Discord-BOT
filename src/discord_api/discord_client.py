@@ -23,6 +23,21 @@ class CustomDiscordClient(Client):
         if str(message.channel.id) == specific_channel_id and message.author != self.user:
             print(f"Recebi uma mensagem: {message.content}")
             prompt = message.content
+            username = str(message.author)  # Obter o nome de usuário
+
+            # Verificar se a mensagem é um comando especial
+            if prompt == "!apagar":
+                # Apagar histórico de conversa
+                with open("conversation_history.json", "w") as file:
+                    json.dump([], file)
+                await message.channel.send(content="Histórico de conversa apagado.")
+                return
+            elif prompt == "!apagar_admin":
+                # Apagar histórico de conversa e canal
+                with open("conversation_history.json", "w") as file:
+                    json.dump([], file)
+                await message.channel.delete()
+                return
 
             # Carregar histórico de conversa
             try:
@@ -40,7 +55,7 @@ class CustomDiscordClient(Client):
 
             # Adicionar resposta ao histórico
             if chat_gpt_response:
-                conversation_history.append({"User": prompt, "Bot": chat_gpt_response})
+                conversation_history.append({"User": f"{username}: {prompt}", "Bot": chat_gpt_response})
 
                 # Salvar o histórico atualizado
                 with open("conversation_history.json", "w") as file:
